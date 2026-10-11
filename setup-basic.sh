@@ -4,7 +4,7 @@ set -e
 # Update system packages
 sudo dnf update -y && sudo dnf upgrade -y
 # Install kernel modules and development tools
-sudo dnf install -y kernel-modules-extra git wget curl
+sudo dnf install -y kernel-modules-extra git wget
 
 if [[ -n "${WSL_DISTRO_NAME:-}" ]] || grep -qi microsoft /proc/version; then
     echo "Skipping Microsoft VS Code installation in WSL."
@@ -25,7 +25,6 @@ sudo dnf install -y gcc make patch zlib-devel bzip2 bzip2-devel readline-devel s
 curl https://pyenv.run | bash
 ~/.pyenv/bin/pyenv init --install
 exec "$SHELL"
-
 
 
 # Install Docker Engine
