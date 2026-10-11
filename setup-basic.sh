@@ -16,6 +16,7 @@ else
 
     # Install using dnf directly
     sudo dnf install -y code
+    sudo ip link set dev eth0 mtu 1350
 fi
 
 # Install pyenv
