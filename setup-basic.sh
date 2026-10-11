@@ -1,22 +1,26 @@
 #!/bin/bash
 set -e
 
-# Install Microsoft VS Code
-# Add official rpm repository (published by Microsoft)
-sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc &&
-echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\nautorefresh=1\ntype=rpm-md\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" | sudo tee /etc/yum.repos.d/vscode.repo > /dev/null
+# Update system packages
+sudo dnf update -y && sudo dnf upgrade -y
+# Install kernel modules and development tools
+sudo dnf install -y kernel-modules-extra git wget curl
 
-# Install using dnf directly
-sudo dnf update -y
 if [[ -n "${WSL_DISTRO_NAME:-}" ]] || grep -qi microsoft /proc/version; then
     echo "Skipping Microsoft VS Code installation in WSL."
 else
+    # Install Microsoft VS Code
+    # Add official rpm repository (published by Microsoft)
+    sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc &&
+    echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\nautorefresh=1\ntype=rpm-md\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" | sudo tee /etc/yum.repos.d/vscode.repo > /dev/null
+
+    # Install using dnf directly
     sudo dnf install -y code
 fi
 
 # Install pyenv
 # Install dependencies for pyenv
-sudo dnf install gcc make patch zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel openssl-devel tk-devel libffi-devel xz-devel
+sudo dnf install -y gcc make patch zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel openssl-devel tk-devel libffi-devel xz-devel
 # Install pyenv using curl
 curl https://pyenv.run | bash
 ~/.pyenv/bin/pyenv init --install
